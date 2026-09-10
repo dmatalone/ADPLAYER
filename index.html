@@ -10,7 +10,7 @@
 
   <title>ESPN Fantasy</title>
 
-  <!-- iPhone Home Screen App Settings -->
+  <!-- iPhone Home Screen Settings -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -18,17 +18,16 @@
   <meta name="application-name" content="ESPN Fantasy">
   <meta name="theme-color" content="#000000">
 
-  <!-- HOME SCREEN ICON -->
+  <!-- ESPN Fantasy Home Screen Icon -->
   <link
     rel="apple-touch-icon"
-    sizes="512x512"
-    href="./apple-touch-icon.png?v=3"
+    href="./apple-touch-icon.png?v=4"
   >
 
   <link
     rel="icon"
     type="image/png"
-    href="./apple-touch-icon.png?v=3"
+    href="./apple-touch-icon.png?v=4"
   >
 
   <style>
@@ -38,14 +37,22 @@
 
     html,
     body {
-      width: 100%;
-      height: 100%;
       margin: 0;
       padding: 0;
+      width: 100%;
+      height: 100%;
       background: #000;
       overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
     }
+
+    /* VIDEO */
 
     #player {
       position: fixed;
@@ -54,10 +61,11 @@
       width: 100%;
       height: 100%;
 
-      background: #000;
-
       object-fit: contain;
+      background: #000;
     }
+
+    /* START SCREEN */
 
     #startScreen {
       position: fixed;
@@ -83,15 +91,14 @@
     }
 
     #playButton {
-      appearance: none;
       border: none;
 
-      background: #ffffff;
-      color: #000000;
-
-      padding: 15px 28px;
+      padding: 15px 32px;
 
       border-radius: 30px;
+
+      background: white;
+      color: black;
 
       font-size: 17px;
       font-weight: 700;
@@ -99,66 +106,78 @@
       cursor: pointer;
     }
 
+    /* FALLBACK BUTTON */
+
     #openButton {
       display: none;
 
       position: fixed;
 
       left: 50%;
-      bottom: calc(30px + env(safe-area-inset-bottom));
+      bottom: calc(
+        30px + env(safe-area-inset-bottom)
+      );
 
       transform: translateX(-50%);
 
-      appearance: none;
       border: none;
-
-      background: #ffffff;
-      color: #000000;
 
       padding: 15px 25px;
 
       border-radius: 30px;
 
+      background: white;
+      color: black;
+
       font-size: 16px;
       font-weight: 700;
+
+      white-space: nowrap;
 
       z-index: 20;
     }
   </style>
 </head>
 
+
 <body>
 
-  <!-- AD VIDEO -->
+  <!-- YOUR 30 SECOND AD -->
+
   <video
     id="player"
     playsinline
     webkit-playsinline
     preload="auto"
   >
-    <source src="./fantasy-ad.mp4" type="video/mp4">
+    <source
+      src="./fantasy-ad.mp4"
+      type="video/mp4"
+    >
   </video>
 
 
   <!-- START SCREEN -->
+
   <div id="startScreen">
 
     <img
       id="logo"
       src="./apple-touch-icon.png"
-      alt="Fantasy"
+      alt="ESPN Fantasy"
     >
 
     <button id="playButton">
-      Play
+      Play Ad
     </button>
 
   </div>
 
 
-  <!-- FALLBACK BUTTON -->
+  <!-- APP FALLBACK -->
+
   <button id="openButton">
-    Open ESPN Fantasy
+    Open ESPN Fantasy App
   </button>
 
 
@@ -178,43 +197,46 @@
 
 
     /*
-      ESPN Fantasy URL
-
-      On iPhone, iOS may hand this URL
-      directly to the installed ESPN app.
+      OPEN ESPN FANTASY APP
     */
-
-    const fantasyURL =
-      "https://fantasy.espn.com/";
-
 
     function openFantasy() {
 
-      window.location.href = fantasyURL;
-
       /*
-        If iOS doesn't open the app,
-        show a backup button.
+        Attempt to launch the installed
+        ESPN Fantasy app directly.
       */
 
-      setTimeout(() => {
+      window.location.href =
+        "espnfantasy://";
 
-        openButton.style.display = "block";
 
-      }, 1200);
+      /*
+        If iOS doesn't accept the app
+        link, show a manual button.
+      */
+
+      setTimeout(function () {
+
+        openButton.style.display =
+          "block";
+
+      }, 1500);
 
     }
 
 
     /*
-      Start advertisement
+      PLAY AD
     */
 
     playButton.addEventListener(
       "click",
+
       async function () {
 
-        startScreen.style.display = "none";
+        startScreen.style.display =
+          "none";
 
         try {
 
@@ -226,12 +248,10 @@
 
         catch (error) {
 
-          console.log(
-            "Video playback blocked:",
-            error
-          );
+          console.log(error);
 
-          startScreen.style.display = "flex";
+          startScreen.style.display =
+            "flex";
 
         }
 
@@ -240,12 +260,12 @@
 
 
     /*
-      When advertisement ends,
-      open ESPN Fantasy.
+      AD FINISHED
     */
 
     player.addEventListener(
       "ended",
+
       function () {
 
         openFantasy();
@@ -255,14 +275,16 @@
 
 
     /*
-      Backup ESPN button
+      MANUAL APP BUTTON
     */
 
     openButton.addEventListener(
       "click",
+
       function () {
 
-        openFantasy();
+        window.location.href =
+          "espnfantasy://";
 
       }
     );
