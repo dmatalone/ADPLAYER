@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="theme-color" content="#000000" />
+  <title>ESPN Fantasy Launcher</title>
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
+    #wrap {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+    }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,.72);
+      z-index: 5;
+    }
+
+    #startButton, #openButton {
+      border: 0;
+      border-radius: 14px;
+      padding: 16px 22px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    #openButton {
+      position: fixed;
+      left: 50%;
+      bottom: max(24px, env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      display: none;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <video id="ad" playsinline preload="auto">
+      <source src="fantasy-ad.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <div id="overlay">
+    <button id="startButton">Play Ad</button>
+  </div>
+
+  <button id="openButton">Open ESPN Fantasy</button>
+
+  <script>
+    const ad = document.getElementById("ad");
+    const overlay = document.getElementById("overlay");
+    const startButton = document.getElementById("startButton");
+    const openButton = document.getElementById("openButton");
+
+    // ESPN Fantasy web fallback.
+    const fallbackURL = "https://fantasy.espn.com/";
+
+    function openFantasy() {
+      // iOS may choose to hand this URL to the ESPN app if Universal Links are supported.
+      window.location.href = fallbackURL;
+
+      // If iOS keeps us in Safari, show a manual fallback button.
+      setTimeout(() => {
+        openButton.style.display = "block";
+      }, 1200);
+    }
+
+    startButton.addEventListener("click", async () => {
+      overlay.style.display = "none";
+      try {
+        ad.currentTime = 0;
+        await ad.play();
+      } catch (e) {
+        overlay.style.display = "flex";
+      }
+    });
+
+    ad.addEventListener("ended", openFantasy);
+
+    openButton.addEventListener("click", openFantasy);
+  </script>
+</body>
+</html>
