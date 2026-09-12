@@ -106,6 +106,28 @@
       cursor: pointer;
     }
 
+    /* SKIP AD BUTTON */
+
+    #skipButton {
+      display: none;
+      position: fixed;
+      right: 18px;
+      bottom: calc(24px + env(safe-area-inset-bottom));
+
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      padding: 12px 18px;
+      border-radius: 8px;
+
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+
+      font-size: 16px;
+      font-weight: 700;
+
+      cursor: pointer;
+      z-index: 30;
+    }
+
     /* FALLBACK BUTTON */
 
     #openButton {
@@ -174,6 +196,13 @@
   </div>
 
 
+  <!-- SKIP AD -->
+
+  <button id="skipButton">
+    Skip Ad
+  </button>
+
+
   <!-- APP FALLBACK -->
 
   <button id="openButton">
@@ -192,8 +221,13 @@
     const playButton =
       document.getElementById("playButton");
 
+    const skipButton =
+      document.getElementById("skipButton");
+
     const openButton =
       document.getElementById("openButton");
+
+    let skipTimer;
 
 
     /*
@@ -201,6 +235,10 @@
     */
 
     function openFantasy() {
+
+      clearTimeout(skipTimer);
+      skipButton.style.display = "none";
+      player.pause();
 
       /*
         Attempt to launch the installed
@@ -238,11 +276,26 @@
         startScreen.style.display =
           "none";
 
+        openButton.style.display =
+          "none";
+
+        skipButton.style.display =
+          "none";
+
+        clearTimeout(skipTimer);
+
         try {
 
           player.currentTime = 0;
 
           await player.play();
+
+          skipTimer = setTimeout(function () {
+
+            skipButton.style.display =
+              "block";
+
+          }, 10000);
 
         }
 
@@ -254,6 +307,21 @@
             "flex";
 
         }
+
+      }
+    );
+
+
+    /*
+      SKIP AD AFTER 10 SECONDS
+    */
+
+    skipButton.addEventListener(
+      "click",
+
+      function () {
+
+        openFantasy();
 
       }
     );
